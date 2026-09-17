@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="NOVA GYM: entrenamiento dirigido, rutinas planificadas y gestión de socios y cuotas.">
+<title>NOVA GYM | Entrenamiento dirigido</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.4'%3E%3Cpath d='M7 4v16M17 4v16M3 8v8M21 8v8M7 12h10'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./Nova Gym _ Gimnasio premium_files/app.css">
+<link rel="stylesheet" href="./estilos.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+</head>
+<body class="bg-zinc-950 text-white antialiased" x-data="gymApp">
+
+<!-- ===================== HEADER ===================== -->
+<header class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-zinc-950/85 backdrop-blur-xl">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-1 lg:px-8" aria-label="Principal">
+        <a href="#" @click.prevent="irA('inicio')" class="brand" aria-label="Ir al inicio">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+            </span>
+            <span class="brand-name">NOVA GYM</span>
+        </a>
+
+        <div class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1.5 text-sm font-semibold text-zinc-300 lg:flex" role="navigation" aria-label="Principal">
+            <a href="#" @click.prevent="irA('inicio')" class="nav-link" :class="view==='inicio' && 'active'">Inicio</a>
+            <a href="#" @click.prevent="irA('rutinas')" class="nav-link" :class="view==='rutinas' && 'active'">Rutinas</a>
+            <a href="#" @click.prevent="irA('clientes')" class="nav-link" :class="view==='clientes' && 'active'">
+                <span class="relative inline-flex items-center gap-1.5">
+                    Clientes
+                    <span class="absolute -right-3 top-0 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,.9)]"></span>
+                </span>
+            </a>
+            <a href="#" @click.prevent="irA('finanzas')" class="nav-link" :class="view==='finanzas' && 'active'">Finanzas</a>
+            <a href="https://wa.me/5493644811000?text=Hola%20NOVA%20GYM%2C%20quiero%20empezar%20a%20entrenar." target="_blank" rel="noopener" class="nav-cta">Empezá hoy</a>
+        </div>
+
+        <div class="hidden items-center gap-3 text-sm font-bold text-zinc-300 lg:flex">
+            <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" aria-label="WhatsApp" class="social-btn">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L4 20.2l1.1-3.7A8.5 8.5 0 1 1 20.5 11.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                    <path d="M8.8 8.2c.2-.5.4-.5.8-.5h.6c.2 0 .5.1.6.5.2.5.7 1.8.8 1.9.1.2.1.4 0 .6-.2.3-.3.4-.5.7-.2.2-.3.4-.1.7.2.3.8 1.3 1.8 2 .9.8 1.7 1 2 .1.3-.2.5-.2.7-.1.2.1 1.6.8 1.8.9.3.1.4.2.5.4.1.2.1 1.1-.3 1.7-.4.6-1.4 1.1-2.2 1.1-.6 0-1.5-.2-2.8-.8-2.4-1-4-3.3-4.2-3.5-.1-.2-1-1.4-1-2.7 0-1.2.6-1.9.8-2.2.3-.3.5-.4.7-.8Z" fill="currentColor"></path>
+                </svg>
+            </a>
+        </div>
+
+        <button class="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5 lg:hidden" type="button" aria-label="Abrir menú" @click="mobileOpen = !mobileOpen">
+            <span class="hamburger" :class="{ 'is-open': mobileOpen }"></span>
+        </button>
+    </nav>
+
+    <div class="border-t border-white/10 px-5 py-5 lg:hidden" x-show="mobileOpen" x-transition @click.outside="mobileOpen = false" style="display: none;">
+        <div class="grid gap-3 text-sm font-semibold text-zinc-200">
+            <a href="#" @click.prevent="irA('inicio')" class="mobile-link">Inicio</a>
+            <a href="#" @click.prevent="irA('rutinas')" class="mobile-link">Rutinas</a>
+            <a href="#" @click.prevent="irA('clientes')" class="mobile-link">Clientes <span class="ml-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-black tracking-widest text-emerald-300">PANEL</span></a>
+            <a href="#" @click.prevent="irA('finanzas')" class="mobile-link">Finanzas</a>
+            <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-primary mt-1 w-full justify-center">Empezá hoy</a>
+        </div>
+    </div>
+</header>
+
+<main class="pt-14">
+
+    <!-- ===================== MÓDULO INICIO ===================== -->
+    <div x-show="view==='inicio'" x-cloak x-transition.opacity.duration.300ms class="module">
+        <!-- HERO -->
+        <section class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-frame relative z-10 mx-auto grid max-w-7xl items-center px-5 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+                <div class="hero-copy is-visible">
+                    <p class="eyebrow">Entrená con método</p>
+                    <h1 class="hero-title-effect hero-title-desktop mt-5 font-black">RESULTADOS QUE SE VEN Y SE SIENTEN</h1>
+                    <h1 class="hero-title-mobile mt-5 font-black">RESULTADOS QUE SE VEN Y SE SIENTEN</h1>
+                    <p class="hero-impact mt-6">Entrenamiento dirigido, equipamiento profesional y un espacio diseñado para que vuelvas todos los días.</p>
+                    <div class="hero-actions mt-8 flex flex-col justify-start gap-4 sm:flex-row">
+                        <a href="#" @click.prevent="anclar('planes')" class="btn-primary hero-secondary-cta justify-center">Ver planes</a>
+                        <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-secondary hero-primary-cta justify-center">Reservá tu clase</a>
+                    </div>
+                    <div class="hero-trust mt-10 grid grid-cols-3 gap-4">
+                        <div class="hero-trust-item"><strong>24/7</strong><span>Turnos flexibles</span></div>
+                        <div class="hero-trust-item"><strong>100%</strong><span>Acompañamiento</span></div>
+                        <div class="hero-trust-item"><strong>12+</strong><span>Estaciones</span></div>
+                    </div>
+                </div>
+                <div class="hero-visual is-visible" aria-hidden="true">
+                    <div class="hero-visual-frame">
+                        <img src="./Nova Gym _ Gimnasio premium_files/galeria-01.jpg" alt="" loading="eager">
+                        <div class="hero-visual-chip hero-visual-chip-a">
+                            <span class="chip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8l1 3h2v14H5V7h2l1-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                            <span><strong>Método guiado</strong><small>Rutinas planificadas</small></span>
+                        </div>
+                        <div class="hero-visual-chip hero-visual-chip-b">
+                            <span class="chip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg></span>
+                            <span><strong>Ambiente enfocado</strong><small>Sin excusas</small></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="marquee" aria-hidden="true">
+            <div class="marquee-track">
+                <span>MÁQUINAS &nbsp;•&nbsp; PESO LIBRE &nbsp;•&nbsp; FUNCIONAL &nbsp;•&nbsp; PLANES FLEXIBLES &nbsp;•&nbsp; ASESORAMIENTO &nbsp;•&nbsp; FUERZA &nbsp;•&nbsp; RESISTENCIA &nbsp;•&nbsp; HIIT &nbsp;•&nbsp; </span>
+                <span>MÁQUINAS &nbsp;•&nbsp; PESO LIBRE &nbsp;•&nbsp; FUNCIONAL &nbsp;•&nbsp; PLANES FLEXIBLES &nbsp;•&nbsp; ASESORAMIENTO &nbsp;•&nbsp; FUERZA &nbsp;•&nbsp; RESISTENCIA &nbsp;•&nbsp; HIIT &nbsp;•&nbsp; </span>
+            </div>
+        </div>
+
+        <!-- BENEFICIOS -->
+        <section class="section-band" aria-labelledby="beneficios-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+                <div class="grid gap-12 benefit-split lg:items-center">
+                    <div class="section-heading is-visible">
+                        <p class="eyebrow">Nuestro diferencial</p>
+                        <h2 id="beneficios-title">Un gimnasio pensado para que entrenes sin fricciones.</h2>
+                        <p class="mt-5 text-lg leading-8 text-zinc-300">Todo el equipamiento y el acompañamiento que necesitás para sostener una rutina real, sin vueltas ni excusas.</p>
+                        <a href="#" @click.prevent="irA('rutinas')" class="btn-secondary mt-8 inline-flex">Ver rutinas planificadas</a>
+                    </div>
+                    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-0">
+                        <article class="feature-card is-visible">
+                            <span class="feature-num" aria-hidden="true">01</span>
+                            <span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 7v10M18 7v10M3 9v6M21 9v6M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M9 9v6M15 9v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                            <h3>Maquinaria completa</h3>
+                            <p>Máquinas, pesos libres y estaciones para cubrir fuerza, hipertrofia y funcional.</p>
+                        </article>
+                        <article class="feature-card is-visible">
+                            <span class="feature-num" aria-hidden="true">02</span>
+                            <span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-5 4 10 2-5h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            <h3>Biomecánica cuidada</h3>
+                            <p>Recorridos más naturales para proteger tu técnica y exprimir cada serie.</p>
+                        </article>
+                        <article class="feature-card is-visible">
+                            <span class="feature-num" aria-hidden="true">03</span>
+                            <span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="2"></path><path d="m17 8 2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            <h3>Acompañamiento</h3>
+                            <p>Profesionales que te corrigen y ajustan el plan según tu evolución.</p>
+                        </article>
+                        <article class="feature-card is-visible">
+                            <span class="feature-num" aria-hidden="true">04</span>
+                            <span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8l1 3h2v14H5V7h2l1-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                            <h3>Turnos flexibles</h3>
+                            <p>Horarios amplios para que encajes el entrenamiento en tu día.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERÍA -->
+        <section id="galeria" class="section-band" aria-labelledby="galeria-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+                <div class="section-heading is-visible">
+                    <p class="eyebrow">Galería</p>
+                    <h2 id="galeria-title">La sala, al detalle.</h2>
+                </div>
+                <div class="gallery-carousel mt-10 is-visible" x-data="{ lightbox:null }">
+                    <button class="gallery-nav gallery-nav-prev" type="button" aria-label="Imagen anterior" @click="$el.nextElementSibling.scrollBy({left:-420,behavior:'smooth'})">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                    <div class="gallery-track" tabindex="0" aria-label="Galería Nova Gym">
+                        <template x-for="(img, i) in ['galeria-01','galeria-08','galeria-10','galeria-11','galeria-13','galeria-14','galeria-15','galeria-17','galeria-18','galeria-20','galeria-21','galeria-24','galeria-36','galeria-43']" :key="img">
+                            <figure class="gallery-slide">
+                                <button class="gallery-lightbox-trigger" type="button" @click="lightbox = './Nova Gym _ Gimnasio premium_files/' + img + '.jpg'" :aria-label="'Ver ' + img">
+                                    <img :src="'./Nova Gym _ Gimnasio premium_files/' + img + '.jpg'" :alt="'Nova Gym ' + (i+1)" loading="lazy">
+                                </button>
+                            </figure>
+                        </template>
+                    </div>
+                    <button class="gallery-nav gallery-nav-next" type="button" aria-label="Imagen siguiente" @click="$el.previousElementSibling.scrollBy({left:420,behavior:'smooth'})">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+
+                    <!-- lightbox -->
+                    <div class="modal-backdrop" x-show="lightbox" x-cloak x-transition @click.self="lightbox = null" style="z-index:150">
+                        <div class="relative">
+                            <button class="modal-close absolute -top-12 right-0" type="button" aria-label="Cerrar imagen" @click="lightbox = null">✕</button>
+                            <img :src="lightbox" alt="Galería ampliada" class="max-h-[82vh] max-w-[92vw] rounded-xl border border-white/10 object-contain shadow-2xl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PLANES -->
+        <section id="planes" class="section-band" aria-labelledby="planes-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+                <div class="section-heading is-visible">
+                    <p class="eyebrow">Planes</p>
+                    <h2 id="planes-title">Elegí el ritmo que se adapta a tu semana.</h2>
+                </div>
+                <div class="mt-10 grid gap-4">
+                    <article class="price-card price-row is-visible">
+                        <div class="price-row-main">
+                            <p class="plan-tag">Flexible</p>
+                            <div>
+                                <h3>DIARIO</h3>
+                                <p class="plan-description">Acceso por jornada para entrenar cuando lo necesites.</p>
+                            </div>
+                        </div>
+                        <div class="price">$ 12.000 <small>/día</small></div>
+                        <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-secondary">Consultar</a>
+                    </article>
+                    <article class="price-card price-card-featured price-row is-visible">
+                        <div class="price-row-main">
+                            <p class="plan-tag">Más elegido</p>
+                            <div>
+                                <h3>MENSUAL</h3>
+                                <p class="plan-description">La experiencia completa para sostener progreso real.</p>
+                            </div>
+                        </div>
+                        <div class="price">$ 50.000 <small>/mes</small></div>
+                        <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-primary">Consultar</a>
+                    </article>
+                    <article class="price-card price-row is-visible">
+                        <div class="price-row-main">
+                            <p class="plan-tag">Parcial</p>
+                            <div>
+                                <h3>SEMANAL</h3>
+                                <p class="plan-description">Una alternativa equilibrada para mantener continuidad.</p>
+                            </div>
+                        </div>
+                        <div class="price">$ 22.000 <small>/semana</small></div>
+                        <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-secondary">Consultar</a>
+                    </article>
+                </div>
+                <p class="mt-8 text-center text-sm text-zinc-400">Planes congelables y sin permanencia. Consultá por promociones y convenios.</p>
+            </div>
+        </section>
+
+        <!-- EQUIPO -->
+        <section class="section-band" aria-labelledby="equipo-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+                <div class="section-heading is-visible">
+                    <p class="eyebrow">Equipo</p>
+                    <h2 id="equipo-title">Entrenás con alguien que te escucha.</h2>
+                </div>
+                <div class="mt-10">
+                    <article class="coach-card coach-card-featured is-visible">
+                        <div class="coach-photo">
+                            <img src="./Nova Gym _ Gimnasio premium_files/foto_entrenadora.png" alt="Entrenador del gimnasio" loading="lazy">
+                        </div>
+                        <div class="coach-profile-copy">
+                            <p class="coach-label">Profesional en Educación Física</p>
+                            <h3>Tu entrenador</h3>
+                            <p class="role">Seguimiento cercano, con foco en tu técnica y tu progreso</p>
+                            <p class="mt-5 text-base leading-8 text-zinc-300">Nuestro equipo de profesionales arma tu plan, corrige tu técnica y acompaña cada etapa de tu evolución. Revisamos cargas, ajustamos la rutina y mantenemos la motivación para que el progreso sea constante.</p>
+                            <p class="coach-quote">“Entrenar es un hábito que se construye con acompañamiento.”</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-band">
+            <div class="mx-auto max-w-7xl px-5 py-16 text-center lg:px-8">
+                <p class="eyebrow">Tu turno</p>
+                <h2 class="mt-4 text-3xl font-black sm:text-4xl">¿Listo para arrancar?</h2>
+                <p class="mx-auto mt-4 max-w-xl text-lg leading-8 text-zinc-300">Elegí tu plan, conocé la sala y empezá esta misma semana. Escribinos por WhatsApp y coordinamos tu primer entrenamiento.</p>
+                <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+                    <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-primary justify-center">Reservar por WhatsApp</a>
+                    <a href="#" @click.prevent="irA('rutinas')" class="btn-secondary justify-center">Explorar rutinas</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACTO -->
+        <section id="contacto" class="section-band" aria-labelledby="contacto-title">
+            <div class="mx-auto grid max-w-7xl gap-10 px-5 contact-split lg:px-8">
+                <div class="is-visible">
+                    <p class="eyebrow">Contacto</p>
+                    <h2 id="contacto-title" class="mt-4 text-4xl font-black leading-tight sm:text-5xl">Dale el primer paso hoy.</h2>
+                    <p class="mt-5 text-lg leading-8 text-zinc-300">Escribinos para conocer los planes, reservar un turno o coordinar una rutina personalizada.</p>
+                    <div class="mt-8 space-y-4 text-sm font-semibold text-zinc-200">
+                        <p>Ubicación: <a class="text-green-200 underline decoration-green-500/50 underline-offset-4 hover:text-white" href="https://maps.app.goo.gl/gAxG2rYafcoK8HqXA" target="_blank" rel="noopener">Sáenz Peña, Chaco, Argentina</a></p>
+                        <p>WhatsApp: <a class="text-green-200 underline decoration-green-500/50 underline-offset-4 hover:text-white" href="https://wa.me/5493644811000" target="_blank" rel="noopener">+54 9 3644 811000</a></p>
+                        <p>Instagram: <a class="text-green-200 underline decoration-green-500/50 underline-offset-4 hover:text-white" href="https://www.instagram.com/nova.gym/" target="_blank" rel="noopener">@nova.gym</a></p>
+                    </div>
+                    <div class="panel-card mt-8 flex items-center gap-4 p-5">
+                        <div class="stat-icon" style="color:#34d399"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-6.5-4.4-6.5-9.6A6.5 6.5 0 0 1 12 5a6.5 6.5 0 0 1 6.5 6.4C18.5 16.6 12 21 12 21Z"/><circle cx="12" cy="11" r="2.2"/></svg></div>
+                        <div>
+                            <p class="font-bold">Lunes a viernes: 7:00 – 23:00 · Sábados: 9:00 – 20:00</p>
+                            <p class="text-sm text-dim mt-0.5">Consultá turnos especiales por WhatsApp.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form is-visible" @submit.prevent="mostrarToast('Consulta recibida. Te respondemos por WhatsApp o email a la brevedad.')">
+                    <div class="grid gap-5 sm:grid-cols-2">
+                        <label class="field">Nombre
+                            <input name="nombre" required autocomplete="given-name" class="input">
+                        </label>
+                        <label class="field">Apellido
+                            <input name="apellido" required autocomplete="family-name" class="input">
+                        </label>
+                    </div>
+                    <div class="grid gap-5 sm:grid-cols-2">
+                        <label class="field">Email
+                            <input type="email" name="email" required autocomplete="email" class="input">
+                        </label>
+                        <label class="field">Teléfono
+                            <input name="telefono" required autocomplete="tel" inputmode="tel" placeholder="+5493644811000" class="input">
+                        </label>
+                    </div>
+                    <label class="field">Plan de interés
+                        <select name="plan_interes" class="input">
+                            <option value="">Quiero que me asesoren</option>
+                            <option value="Diario">Diario</option>
+                            <option value="Mensual">Mensual (recomendado)</option>
+                            <option value="Semanal">Semanal</option>
+                        </select>
+                    </label>
+                    <label class="field">Mensaje
+                        <textarea name="mensaje" rows="5" placeholder="Contanos tu objetivo, horarios disponibles o cualquier consulta." class="input"></textarea>
+                    </label>
+                    <button class="btn-primary w-full justify-center" type="submit">Enviar consulta</button>
+                </form>
+            </div>
+        </section>
+        </div>
+
+    <!-- ===================== MÓDULO RUTINAS ===================== -->
+    <div x-show="view==='rutinas'" x-cloak x-transition.opacity.duration.300ms class="module">
+        <section class="section-band" aria-labelledby="rutinas-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="section-heading is-visible" style="margin:0">
+                        <p class="eyebrow">Rutinas</p>
+                        <h2 id="rutinas-title">Rutinas por objetivo, pensadas para progresar con método.</h2>
+                        <p class="mt-5 text-lg leading-8 text-zinc-300">Elegí tu objetivo y seguí una estructura clara de frecuencia, series y repeticiones. Cada rutina puede ajustarse a tu nivel, disponibilidad y preferencias.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button class="btn-panel" type="button" @click="restaurarRutinas()">Restaurar base</button>
+                        <button class="btn-panel btn-green" type="button" @click="abrirFormRutina()">+ Nueva rutina</button>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <div class="filter-tabs">
+                        <button class="filter-tab" :class="filtroRutina==='todas' && 'active'" @click="filtroRutina='todas'">Todas</button>
+                        <template x-for="o in objetivosRutinas()" :key="o.slug">
+                            <button class="filter-tab" :class="filtroRutina===o.slug && 'active'" @click="filtroRutina=o.slug" x-text="o.label"></button>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="mt-10 grid gap-6 guide-grid">
+                    <template x-for="r in rutinasFiltradas()" :key="r.id">
+                        <article class="price-card rutina-card is-visible">
+                            <div>
+                                <p class="plan-tag" x-text="r.tag"></p>
+                                <h3 class="mt-2" x-text="r.titulo"></h3>
+                                <p class="plan-description" x-text="r.descripcion"></p>
+                            </div>
+                            <div class="rutina-meta mt-6">
+                                <span class="meta-chip" x-text="'🎯 ' + r.objetivo"></span>
+                                <span class="meta-chip" x-text="'🗓 ' + r.frecuencia"></span>
+                                <span class="meta-chip" x-text="'⏱ ' + r.duracion"></span>
+                            </div>
+                            <button class="btn-primary mt-8 w-full justify-center" type="button" @click="abrirRutina(r)">Ver rutina completa</button>
+                            <div class="mt-3 grid grid-cols-2 gap-2">
+                                <button class="btn-panel btn-ghost-green btn-ghost-sm justify-center" type="button" @click="abrirFormRutina(r)">Editar</button>
+                                <button class="btn-panel btn-danger btn-ghost-sm justify-center" type="button" @click="eliminarRutina(r)">Eliminar</button>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+
+                <div class="section-heading is-visible mt-16 text-center" style="max-width:none">
+                    <p class="eyebrow">Asesoramiento</p>
+                    <h2>¿Querés una rutina 100% personalizada?</h2>
+                    <p class="mt-5 text-lg leading-8 text-zinc-300">Completá una consulta y armamos tu plan según tu nivel, objetivo y horarios disponibles.</p>
+                    <a href="#" @click.prevent="anclar('contacto')" class="btn-primary mt-8 inline-flex">Hacer una consulta</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===================== MÓDULO CLIENTES ===================== -->
+    <div x-show="view==='clientes'" x-cloak x-transition.opacity.duration.300ms class="module">
+        <section class="section-band" aria-labelledby="clientes-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+
+                <!-- encabezado -->
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="section-heading is-visible" style="margin:0">
+                        <p class="eyebrow">Panel de gestión</p>
+                        <h2 id="clientes-title">Clientes y cuotas.</h2>
+                        <p class="mt-4 text-base leading-7 text-zinc-300">Datos guardados en este navegador (localStorage). Registrá altas, cobros y seguí los vencimientos al día.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button class="btn-panel" type="button" @click="cargarDemo()">Cargar datos demo</button>
+                        <button class="btn-panel" type="button" @click="vaciarDatos()">Vaciar</button>
+                        <button class="btn-panel btn-green" type="button" @click="abrirForm()">+ Nuevo cliente</button>
+                    </div>
+                </div>
+
+                <div x-show="!cargado" class="mt-6 text-sm text-zinc-400">Cargando…</div>
+
+                <div x-show="cargado" x-cloak x-transition>
+                <!-- stats -->
+                <div class="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                    <div class="panel-card stat-card" style="--glow:rgba(255,255,255,.1)">
+                        <div class="stat-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M20 8v6M17 11h6"/></svg></div>
+                        <div>
+                            <p class="stat-num" x-text="stats().total"></p>
+                            <p class="stat-label">Clientes</p>
+                            <p class="stat-sub" x-text="stats().total===1 ? '1 registrado' : stats().total + ' registrados'"></p>
+                        </div>
+                    </div>
+                    <div class="panel-card stat-card" style="--glow:rgba(52,211,153,.18)">
+                        <div class="stat-icon" style="color:#34d399"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 4 4L19 6"/></svg></div>
+                        <div>
+                            <p class="stat-num" x-text="stats().alDia"></p>
+                            <p class="stat-label">Al día</p>
+                            <p class="stat-sub">Cuotas vigentes</p>
+                        </div>
+                    </div>
+                    <div class="panel-card stat-card" style="--glow:rgba(251,191,36,.16)">
+                        <div class="stat-icon" style="color:#fbbf24"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.6"/></svg></div>
+                        <div>
+                            <p class="stat-num" x-text="stats().proximas"></p>
+                            <p class="stat-label">Próximas a vencer</p>
+                            <p class="stat-sub">Menos de 7 días</p>
+                        </div>
+                    </div>
+                    <div class="panel-card stat-card" style="--glow:rgba(248,113,113,.16)">
+                        <div class="stat-icon" style="color:#f87171"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
+                        <div>
+                            <p class="stat-num" x-text="stats().vencidas"></p>
+                            <p class="stat-label">Vencidas</p>
+                            <p class="stat-sub" x-text="'Mora: $' + stats().mora.toLocaleString('es-AR')"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- toolbar -->
+                <div class="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div class="filter-tabs">
+                        <button class="filter-tab" :class="filtroEstado==='todos' && 'active'" @click="filtroEstado='todos'">Todos</button>
+                        <button class="filter-tab" :class="filtroEstado==='aldia' && 'active'" @click="filtroEstado='aldia'">Al día</button>
+                        <button class="filter-tab" :class="filtroEstado==='proxima' && 'active'" @click="filtroEstado='proxima'">Próximas</button>
+                        <button class="filter-tab" :class="filtroEstado==='vencida' && 'active'" @click="filtroEstado='vencida'">Vencidas</button>
+                    </div>
+                    <div class="search-box w-full md:w-80">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="search" class="input" placeholder="Buscar por nombre, teléfono o email…" x-model="buscar">
+                    </div>
+                </div>
+
+                <!-- tabla -->
+                <div class="table-wrap mt-6" x-show="clientesFiltrados().length > 0">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Plan</th>
+                                <th>Alta</th>
+                                <th>Último pago</th>
+                                <th>Próxima cuota</th>
+                                <th>Estado</th>
+                                <th style="text-align:right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="c in clientesFiltrados()" :key="c.id">
+                                <tr>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div class="client-avatar" x-text="(c.nombre[0] || '') + (c.apellido[0] || '')"></div>
+                                            <div>
+                                                <p class="font-bold hover:text-emerald-300 transition-colors" x-text="c.nombre + ' ' + c.apellido" @click="abrirDetalle(c)" style="cursor:pointer"></p>
+                                                <p class="text-xs text-dim mt-0.5" x-text="c.email || c.telefono || 'Sin contacto'"></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="plan-chip" x-text="PLANES[c.plan].label"></span></td>
+                                    <td class="text-dim" x-text="fmtFecha(c.fechaInicio)"></td>
+                                    <td class="text-dim" x-text="fmtFecha(c.ultimoPago)"></td>
+                                    <td class="font-semibold" x-text="fmtFecha(c.proximaCuota) + ' · ' + proximaDelta(c)"></td>
+                                    <td><span class="badge" :class="estadoBadge(estadoCliente(c))" x-text="estadoLabel(c)"></span></td>
+                                    <td>
+                                        <div class="actions">
+                                            <button class="btn-panel btn-ghost-green btn-ghost-sm" type="button" @click="abrirPago(c)">Cobrar</button>
+                                            <button class="btn-panel btn-ghost-sm" type="button" @click="abrirForm(c)">Editar</button>
+                                            <button class="btn-panel btn-danger btn-ghost-sm" type="button" @click="pedirEliminar(c)">Eliminar</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- vacío -->
+                <div class="empty-state mt-6" x-show="clientesFiltrados().length===0">
+                    <p class="text-4xl font-black" x-text="clientes.length ? 'Sin resultados' : 'Todavía no hay clientes'"></p>
+                    <p class="mx-auto mt-2 max-w-md text-sm text-zinc-400" x-text="clientes.length ? 'Probá con otro término de búsqueda o cambiá el filtro de estado.' : 'Dale al botón “Cargar datos demo” para ver el panel con ejemplos, o creá tu primer cliente.'"></p>
+                    <div class="mt-6 flex flex-wrap justify-center gap-3">
+                        <template x-if="clientes.length === 0">
+                            <button class="btn-panel btn-green" type="button" @click="abrirForm()">Crear primer cliente</button>
+                        </template>
+                        <template x-if="clientes.length === 0">
+                            <button class="btn-panel" type="button" @click="cargarDemo()">Cargar datos demo</button>
+                        </template>
+                        <template x-if="clientes.length > 0">
+                            <button class="btn-panel" type="button" @click="buscar=''; filtroEstado='todos'">Limpiar filtros</button>
+                        </template>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===================== MÓDULO FINANZAS ===================== -->
+    <div x-show="view==='finanzas'" x-cloak x-transition.opacity.duration.300ms class="module">
+        <section class="section-band" aria-labelledby="finanzas-title">
+            <div class="mx-auto max-w-7xl px-5 lg:px-8">
+
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="section-heading is-visible" style="margin:0">
+                        <p class="eyebrow">Panel de gestión</p>
+                        <h2 id="finanzas-title">Finanzas · Ingresos y gastos.</h2>
+                        <p class="mt-4 text-base leading-7 text-zinc-300">Los ingresos se calculan automáticamente con las cuotas cobradas a los clientes. Registrá los gastos del gimnasio para ver el balance del mes.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button class="btn-panel" type="button" @click="cargarDemoGastos()">Cargar gastos demo</button>
+                        <button class="btn-panel" type="button" @click="vaciarGastos()">Vaciar gastos</button>
+                        <button class="btn-panel btn-green" type="button" @click="abrirFormGasto()">+ Nuevo gasto</button>
+                    </div>
+                </div>
+
+                <!-- selector de mes -->
+                <div class="mt-8 flex flex-wrap items-center gap-3">
+                    <label class="field" for="mes-filtro">Período</label>
+                    <div class="relative">
+                        <select id="mes-filtro" class="input" style="width:15rem" x-model="mesFiltro">
+                            <option value="todos">Todos los meses</option>
+                            <template x-for="m in mesesOpciones()" :key="'mes-' + m">
+                                <option :value="m" x-text="labelMes(m)"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <span class="text-sm text-dim" x-text="'Viendo: ' + labelMes(mesFiltro)"></span>
+                </div>
+
+                <!-- stats -->
+                <div class="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                    <div class="panel-card stat-card" style="--glow:rgba(52,211,153,.18)">
+                        <div class="stat-icon" style="color:#34d399">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>
+                        </div>
+                        <div>
+                            <p class="stat-num" x-text="'$' + totalIngresos(mesFiltro).toLocaleString('es-AR')"></p>
+                            <p class="stat-label">Ingresos (cuotas)</p>
+                            <p class="stat-sub" x-text="cuotasCobradas(mesFiltro) + (cuotasCobradas(mesFiltro)===1 ? ' cuota cobrada' : ' cuotas cobradas')"></p>
+                        </div>
+                    </div>
+                    <div class="panel-card stat-card" style="--glow:rgba(248,113,113,.16)">
+                        <div class="stat-icon" style="color:#f87171">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16M6 10V6h12v4M8 10v10M16 10v10"/><path d="M12 10v10"/></svg>
+                        </div>
+                        <div>
+                            <p class="stat-num" x-text="'$' + totalGastos(mesFiltro).toLocaleString('es-AR')"></p>
+                            <p class="stat-label">Egresos (gastos)</p>
+                            <p class="stat-sub" x-text="gastosMes(mesFiltro).length + (gastosMes(mesFiltro).length===1 ? ' gasto' : ' gastos')"></p>
+                        </div>
+                    </div>
+                    <div class="panel-card stat-card" style="--glow:rgba(255,255,255,.1)">
+                        <div class="stat-icon" style="color:#e4e4e7">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M17 7H9.5a2.5 2.5 0 0 0 0 5h5a2.5 2.5 0 0 1 0 5H6"/></svg>
+                        </div>
+                        <div>
+                            <p class="stat-num" :class="balance(mesFiltro) >= 0 ? 'text-emerald-300' : 'text-red-400'" x-text="(balance(mesFiltro) < 0 ? '−$' : '$') + Math.abs(balance(mesFiltro)).toLocaleString('es-AR')"></p>
+                            <p class="stat-label">Balance del período</p>
+                            <p class="stat-sub" x-text="balance(mesFiltro) >= 0 ? 'Resultado positivo' : 'Resultado negativo'"></p>
+                        </div>
+                    </div>
+                    <div class="panel-card stat-card" style="--glow:rgba(251,191,36,.16)">
+                        <div class="stat-icon" style="color:#fbbf24">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+                        </div>
+                        <div>
+                            <p class="stat-num" x-text="'$' + stats().mora.toLocaleString('es-AR')"></p>
+                            <p class="stat-label">En mora (clientes)</p>
+                            <p class="stat-sub" x-text="stats().vencidas + (stats().vencidas===1 ? ' cuota vencida' : ' cuotas vencidas')"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- gráfico 6 meses -->
+                <div class="panel-card mt-8 p-6">
+                    <div class="flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p class="eyebrow" style="margin:0">Evolución</p>
+                            <h3 class="mt-1 text-xl font-black">Últimos 6 meses</h3>
+                        </div>
+                        <div class="legend">
+                            <span><i style="background:#34d399"></i> Ingresos</span>
+                            <span><i style="background:#f87171"></i> Egresos</span>
+                        </div>
+                    </div>
+                    <div class="bar-chart mt-6">
+                        <template x-for="b in ultimosMeses(6)" :key="b.clave">
+                            <div class="bar-col">
+                                <div class="bar-pair">
+                                    <div class="bar bar-ing" :style="'height:' + barAlto(b.ingreso) + '%'" :title="'Ingresos: $' + b.ingreso.toLocaleString('es-AR')"></div>
+                                    <div class="bar bar-egr" :style="'height:' + barAlto(b.egreso) + '%'" :title="'Egresos: $' + b.egreso.toLocaleString('es-AR')"></div>
+                                </div>
+                                <span class="bar-net" x-text="((b.ingreso - b.egreso) < 0 ? '−$' : '$') + Math.abs(b.ingreso - b.egreso).toLocaleString('es-AR')"></span>
+                                <span class="bar-label" x-text="b.label"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- detalle ingresos / gastos -->
+                <div class="mt-8 grid gap-6 lg:grid-cols-2">
+
+                    <!-- ingresos -->
+                    <div class="panel-card p-6">
+                        <div class="flex items-center justify-between gap-3">
+                            <h3 class="text-lg font-black" style="display:flex;align-items:center;gap:.6rem"><span class="income-dot"></span> Cuotas cobradas</h3>
+                            <span class="plan-chip" x-text="'$' + totalIngresos(mesFiltro).toLocaleString('es-AR')"></span>
+                        </div>
+                        <div class="table-wrap mt-4" x-show="ingresosMes(mesFiltro).length > 0">
+                            <table class="admin-table" style="min-width:420px">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Período</th>
+                                        <th style="text-align:right">Monto</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="p in ingresosMes(mesFiltro)" :key="p.clave">
+                                        <tr>
+                                            <td class="text-dim" x-text="fmtFecha(p.fecha)"></td>
+                                            <td class="font-semibold" x-text="p.cliente"></td>
+                                            <td><span class="plan-chip" x-text="p.periodo"></span></td>
+                                            <td class="font-bold text-emerald-300" style="text-align:right" x-text="'+$' + p.monto.toLocaleString('es-AR')"></td>
+                                            <td>
+                                                <div class="actions">
+                                                    <button class="btn-panel btn-danger btn-ghost-sm" type="button" @click="quitarPago(p.ref.c, p.ref.p)">Anular</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state mt-4" x-show="ingresosMes(mesFiltro).length === 0">
+                            <p class="font-black">Sin ingresos en este período</p>
+                            <p class="mt-2 text-sm text-zinc-400">Cuando cobres una cuota desde el panel de <strong>Clientes</strong>, aparece acá automáticamente.</p>
+                        </div>
+                    </div>
+
+                    <!-- gastos -->
+                    <div class="panel-card p-6">
+                        <div class="flex items-center justify-between gap-3">
+                            <h3 class="text-lg font-black">Gastos del gimnasio</h3>
+                            <button class="btn-panel btn-ghost-green btn-ghost-sm" type="button" @click="abrirFormGasto()">+ Cargar gasto</button>
+                        </div>
+                        <div class="table-wrap mt-4" x-show="gastosMes(mesFiltro).length > 0">
+                            <table class="admin-table" style="min-width:440px">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Categoría</th>
+                                        <th>Descripción</th>
+                                        <th style="text-align:right">Monto</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="g in gastosMes(mesFiltro)" :key="'gasto-' + g.id">
+                                        <tr>
+                                            <td class="text-dim" x-text="fmtFecha(g.fecha)"></td>
+                                            <td><span class="cat-chip" :class="categoriaBadge(g.categoria)" x-text="categoriaLabel(g.categoria)"></span></td>
+                                            <td class="font-semibold" x-text="g.descripcion"></td>
+                                            <td class="font-bold text-red-400" style="text-align:right" x-text="'−$' + g.monto.toLocaleString('es-AR')"></td>
+                                            <td>
+                                                <div class="actions">
+                                                    <button class="btn-panel btn-ghost-sm" type="button" @click="abrirFormGasto(g)">Editar</button>
+                                                    <button class="btn-panel btn-danger btn-ghost-sm" type="button" @click="eliminarGasto(g)">Eliminar</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state mt-4" x-show="gastosMes(mesFiltro).length === 0">
+                            <p class="font-black">Sin gastos en este período</p>
+                            <p class="mt-2 text-sm text-zinc-400">Registrá alquiler, luz, máquinas o insumos (agua potable) con el botón “+ Cargar gasto”.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="border-t border-white/10 bg-black px-5 py-12 lg:px-8">
+    <div class="mx-auto grid max-w-7xl gap-10 md:grid-cols-2 footer-grid">
+        <div>
+            <a href="#" @click.prevent="irA('inicio')" class="brand mb-4 inline-flex items-center gap-2" aria-label="Volver al inicio">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+                </span>
+                <span class="brand-name">NOVA GYM</span>
+            </a>
+            <p class="mt-3 text-sm leading-7 text-zinc-400">Entrenamiento dirigido y un espacio pensado para que el hábito se vuelva rutina.</p>
+        </div>
+        <div>
+            <p class="footer-title">Navegación</p>
+            <div class="mt-3 grid gap-2 text-sm text-zinc-400">
+                <a href="#" @click.prevent="irA('inicio')" class="footer-link hover:text-emerald-300">Inicio</a>
+                <a href="#" @click.prevent="irA('rutinas')" class="footer-link hover:text-emerald-300">Rutinas</a>
+                <a href="#" @click.prevent="irA('clientes')" class="footer-link hover:text-emerald-300">Clientes</a>
+                <a href="#" @click.prevent="irA('finanzas')" class="footer-link hover:text-emerald-300">Finanzas</a>
+            </div>
+        </div>
+        <div>
+            <p class="footer-title">Horarios</p>
+            <div class="mt-3 grid gap-1 text-sm text-zinc-400">
+                <p>Lunes a viernes: 7:00 – 23:00</p>
+                <p>Sábados: 9:00 – 20:00</p>
+                <p class="mt-2 text-zinc-500">Consultá turnos especiales por WhatsApp.</p>
+            </div>
+        </div>
+        <div>
+            <p class="footer-title">Contacto</p>
+            <div class="mt-3 grid gap-1 text-sm text-zinc-400">
+                <p>Sáenz Peña, Chaco, Argentina</p>
+                <p>WhatsApp +54 9 3644 811000</p>
+                <p>@nova.gym</p>
+            </div>
+        </div>
+    </div>
+    <div class="mx-auto mt-10 flex max-w-7xl flex-col gap-2 border-t border-white/10 pt-6 text-xs text-zinc-500 md:flex-row md:items-center md:justify-between">
+        <p>© 2026 NOVA GYM. Todos los derechos reservados.</p>
+        <p>Entrená mejor, viví mejor.</p>
+    </div>
+</footer>
+
+<!-- flotantes -->
+<button id="back-to-top" class="scroll-top-button is-visible" type="button" aria-label="Volver arriba" @click="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+
+<a class="whatsapp-float" href="https://wa.me/5493644811000?text=Hola%20NOVA%20GYM%2C%20quiero%20consultar%20por%20los%20planes." target="_blank" rel="noopener" aria-label="Consultar por WhatsApp">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L4 20.2l1.1-3.7A8.5 8.5 0 1 1 20.5 11.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+        <path d="M8.8 8.2c.2-.5.4-.5.8-.5h.6c.2 0 .5.1.6.5.2.5.7 1.8.8 1.9.1.2.1.4 0 .6-.2.3-.3.4-.5.7-.2.2-.3.4-.1.7.2.3.8 1.3 1.8 2 .9.8 1.7 1 2 .1.3-.2.5-.2.7-.1.2.1 1.6.8 1.8.9.3.1.4.2.5.4.1.2.1 1.1-.3 1.7-.4.6-1.4 1.1-2.2 1.1-.6 0-1.5-.2-2.8-.8-2.4-1-4-3.3-4.2-3.5-.1-.2-1-1.4-1-2.7 0-1.2.6-1.9.8-2.2.3-.3.5-.4.7-.8Z" fill="currentColor"></path>
+    </svg>
+</a>
+
+<!-- toast -->
+<div class="toast" x-show="toast" x-cloak x-transition x-text="toast"></div>
+
+<!-- ===================== MODALES ===================== -->
+
+<!-- rutina completa -->
+<div class="modal-backdrop" x-show="rutinaActiva" x-cloak x-transition @click.self="cerrarRutina()">
+    <div class="modal modal-lg" x-show="rutinaActiva" x-transition>
+        <template x-if="rutinaActiva">
+            <div>
+                <div class="modal-head">
+                    <div>
+                        <p class="plan-tag" x-text="rutinaActiva.tag"></p>
+                        <h3 class="mt-1 text-2xl font-black" x-text="rutinaActiva.titulo"></h3>
+                        <p class="mt-2 text-sm leading-6 text-zinc-400" x-text="rutinaActiva.descripcion"></p>
+                    </div>
+                    <button class="modal-close" type="button" aria-label="Cerrar" @click="cerrarRutina()">✕</button>
+                </div>
+
+                <div class="rutina-meta mb-6">
+                    <span class="meta-chip" x-text="'Objetivo: ' + rutinaActiva.objetivo"></span>
+                    <span class="meta-chip" x-text="'Frecuencia: ' + rutinaActiva.frecuencia"></span>
+                    <span class="meta-chip" x-text="'Duración: ' + rutinaActiva.duracion"></span>
+                    <span class="meta-chip" x-text="'Nivel: ' + rutinaActiva.nivel"></span>
+                </div>
+
+                <div class="grid gap-4">
+                    <template x-for="(d, i) in rutinaActiva.dias" :key="i">
+                        <div class="day-block">
+                            <div class="day-head">
+                                <p class="font-bold" x-text="d.nombre"></p>
+                                <span class="plan-chip" x-text="(i+1) + ' de ' + rutinaActiva.dias.length"></span>
+                            </div>
+                            <table class="day-table">
+                                <thead>
+                                    <tr><th>Ejercicio</th><th>Series</th><th>Reps</th><th>Descanso</th></tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="(ex, j) in d.ejercicios" :key="j">
+                                        <tr>
+                                            <td class="font-semibold" x-text="ex.e"></td>
+                                            <td class="text-dim" x-text="ex.s"></td>
+                                            <td class="text-dim" x-text="ex.r"></td>
+                                            <td class="text-dim" x-text="ex.rest"></td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="panel-card mt-5 flex gap-3 p-4">
+                    <span class="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-300">!</span>
+                    <p class="text-sm leading-6 text-zinc-300" x-text="rutinaActiva.tips"></p>
+                </div>
+
+                <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                    <a href="https://wa.me/5493644811000" target="_blank" rel="noopener" class="btn-primary w-full justify-center">Quiero esta rutina</a>
+                    <button class="btn-secondary w-full justify-center" type="button" @click="cerrarRutina()">Cerrar</button>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<!-- formulario cliente -->
+<div class="modal-backdrop" x-show="formAbierto" x-cloak x-transition @click.self="formAbierto=false">
+    <div class="modal modal-lg" x-show="formAbierto" x-transition>
+        <div class="modal-head">
+            <div>
+                <p class="plan-tag">Clientes</p>
+                <h3 class="mt-1 text-2xl font-black" x-text="editando ? 'Editar cliente' : 'Nuevo cliente'"></h3>
+            </div>
+            <button class="modal-close" type="button" aria-label="Cerrar" @click="formAbierto=false">✕</button>
+        </div>
+
+        <div class="grid gap-5">
+
+            <section class="form-section">
+                <p class="form-section-title">Datos personales</p>
+                <div class="form-grid">
+                    <label class="field">Nombre *
+                        <input type="text" class="input" x-model="form.nombre" placeholder="Ej.: Luciana">
+                    </label>
+                    <label class="field">Apellido *
+                        <input type="text" class="input" x-model="form.apellido" placeholder="Ej.: Ramírez">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">DNI
+                        <input type="text" class="input" x-model="form.dni" placeholder="Ej.: 30.111.222">
+                    </label>
+                    <label class="field">Fecha de nacimiento
+                        <input type="date" class="input" x-model="form.fechaNacimiento">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">Domicilio
+                        <input type="text" class="input" x-model="form.domicilio" placeholder="Calle, número, barrio">
+                    </label>
+                    <label class="field">Ocupación
+                        <input type="text" class="input" x-model="form.ocupacion" placeholder="Ej.: Docente, comerciante">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">Teléfono
+                        <input type="tel" class="input" x-model="form.telefono" placeholder="+5493644811000">
+                    </label>
+                    <label class="field">Email
+                        <input type="email" class="input" x-model="form.email" placeholder="cliente@mail.com">
+                    </label>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">Tutor / responsable <span class="text-dim font-normal">(menores de edad)</span></p>
+                <div class="form-grid">
+                    <label class="field">Nombre del tutor
+                        <input type="text" class="input" x-model="form.tutorNombre" placeholder="Nombre y apellido">
+                    </label>
+                    <label class="field">Teléfono del tutor
+                        <input type="tel" class="input" x-model="form.tutorTelefono" placeholder="+5493644811000">
+                    </label>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">Servicio de emergencia</p>
+                <div class="form-grid">
+                    <label class="field">¿Está afiliado a un servicio de emergencia?
+                        <select class="input" x-model="form.emergencia">
+                            <option value="">Sin especificar</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </label>
+                    <label class="field" x-show="form.emergencia === 'si'">¿Cuál?
+                        <input type="text" class="input" x-model="form.emergenciaCual" placeholder="Ej.: SAME 107, Mutual...">
+                    </label>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">Antecedentes familiares</p>
+                <p class="text-xs text-dim" style="margin-top:-.4rem">¿Posee algún familiar directo con...?</p>
+                <div class="check-grid">
+                    <label class="check-pill"><input type="checkbox" x-model="form.famDiabetes"><span>Diabetes</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.famCardiopatia"><span>Cardiopatía</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.famMuerteSubita"><span>Muerte súbita</span></label>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">Antecedentes personales</p>
+                <div class="form-grid">
+                    <label class="field">¿Posee alergias?
+                        <select class="input" x-model="form.alergias">
+                            <option value="">Sin especificar</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </label>
+                    <label class="field" x-show="form.alergias === 'si'">¿A qué?
+                        <input type="text" class="input" x-model="form.alergiasCual" placeholder="Ej.: penicilina, polen">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">¿Tuvo convulsiones?
+                        <select class="input" x-model="form.convulsiones">
+                            <option value="">Sin especificar</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </label>
+                    <label class="field">¿Tiene operaciones?
+                        <select class="input" x-model="form.operaciones">
+                            <option value="">Sin especificar</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </label>
+                </div>
+                <label class="field" x-show="form.operaciones === 'si'">¿De qué?
+                    <input type="text" class="input" x-model="form.operacionesCual" placeholder="Ej.: ligamentos de rodilla (2022)">
+                </label>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">En los últimos 2 meses tuvo</p>
+                <div class="check-grid">
+                    <label class="check-pill"><input type="checkbox" x-model="form.lesionEsguinces"><span>Esguinces</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.lesionLuxaciones"><span>Luxaciones</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.lesionDesgarros"><span>Desgarros</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.lesionFracturas"><span>Fracturas</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.lesionNinguna"><span>Ninguna</span></label>
+                    <label class="check-pill"><input type="checkbox" x-model="form.lesionOtra"><span>Otra</span></label>
+                </div>
+                <label class="field" x-show="form.lesionOtra">¿Qué otra?
+                    <input type="text" class="input" x-model="form.lesionOtraCual" placeholder="Detallá la lesión">
+                </label>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">Cómo llegó y objetivo</p>
+                <div class="form-grid">
+                    <label class="field">¿Cómo conoció el gimnasio?
+                        <select class="input" x-model="form.comoConocio">
+                            <option value="">Sin especificar</option>
+                            <option value="recomendacion">Recomendación de un amigo/familiar</option>
+                            <option value="redes">Redes sociales</option>
+                            <option value="calle">Pasó por la calle</option>
+                            <option value="persona">Lo vio en persona</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </label>
+                    <label class="field">Objetivo
+                        <input type="text" class="input" x-model="form.objetivo" placeholder="Ej.: bajar de peso, tonificar">
+                    </label>
+                </div>
+                <label class="field">Observaciones
+                    <textarea class="input" rows="2" x-model="form.observaciones" placeholder="Alguna otra situación a tener en cuenta"></textarea>
+                </label>
+            </section>
+
+            <section class="form-section">
+                <div class="flex items-center justify-between gap-3">
+                    <p class="form-section-title" style="margin:0">Medidas corporales</p>
+                    <button class="btn-panel btn-ghost-green btn-ghost-sm" type="button" @click="agregarMedida()">+ Agregar medición</button>
+                </div>
+                <p class="text-xs text-dim" style="margin-top:-.4rem">Peso en kg y perímetros en cm. Podés registrar varias fechas para ver la evolución.</p>
+                <div class="medida-wrap">
+                    <div class="medida-head">
+                        <span>Fecha</span><span>Peso</span><span>Espalda</span><span>Cintura</span><span>Abdomen</span><span>Glúteo</span><span>Pierna</span><span></span>
+                    </div>
+                    <template x-for="(m, i) in (form.medidas || [])" :key="'med-' + i">
+                        <div class="medida-row">
+                            <input type="date" class="input" x-model="m.fecha">
+                            <input type="number" step="0.1" class="input" x-model="m.peso" placeholder="kg">
+                            <input type="number" step="0.1" class="input" x-model="m.espalda" placeholder="cm">
+                            <input type="number" step="0.1" class="input" x-model="m.cintura" placeholder="cm">
+                            <input type="number" step="0.1" class="input" x-model="m.abdomen" placeholder="cm">
+                            <input type="number" step="0.1" class="input" x-model="m.gluteo" placeholder="cm">
+                            <input type="number" step="0.1" class="input" x-model="m.pierna" placeholder="cm">
+                            <button class="modal-close" type="button" style="width:2rem;height:2rem" @click="quitarMedida(i)" aria-label="Quitar">✕</button>
+                        </div>
+                    </template>
+                </div>
+                <p x-show="!form.medidas || !form.medidas.length" class="text-xs text-dim">Sin mediciones cargadas.</p>
+            </section>
+
+            <section class="form-section">
+                <p class="form-section-title">Plan y cuota</p>
+                <div class="form-grid">
+                    <label class="field">Plan
+                        <select class="input" x-model="form.plan" @change="planChanged()">
+                            <option value="mensual">Mensual</option>
+                            <option value="semanal">Semanal</option>
+                            <option value="diario">Diario</option>
+                        </select>
+                    </label>
+                    <label class="field">Cuota $
+                        <input type="number" min="0" step="500" class="input" x-model.number="form.precio">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">Fecha de inicio
+                        <input type="date" class="input" x-model="form.fechaInicio">
+                    </label>
+                    <label class="field">Notas
+                        <input type="text" class="input" x-model="form.notas" placeholder="Turno, observaciones internas">
+                    </label>
+                </div>
+            </section>
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-6 text-zinc-400">
+                <template x-if="!editando">
+                    <p>Al crear, la <strong class="text-zinc-200">primera cuota queda pendiente</strong> hasta registrar un cobro. La fecha de vencimiento se calcula según el plan.</p>
+                </template>
+                <template x-if="editando">
+                    <p>Editar no modifica las cuotas ya registradas. Usá el botón <strong class="text-zinc-200">Cobrar</strong> en el listado para registrar una nueva cuota.</p>
+                </template>
+            </div>
+            <div class="flex gap-3">
+                <button class="btn-primary w-full justify-center" type="button" @click="guardarCliente()" x-text="editando ? 'Guardar cambios' : 'Crear cliente'"></button>
+                <button class="btn-secondary justify-center" type="button" @click="formAbierto=false">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- formulario rutina -->
+<div class="modal-backdrop" x-show="rutinaFormAbierto" x-cloak x-transition @click.self="rutinaFormAbierto=false">
+    <div class="modal modal-lg" x-show="rutinaFormAbierto" x-transition>
+        <div class="modal-head">
+            <div>
+                <p class="plan-tag">Rutinas</p>
+                <h3 class="mt-1 text-2xl font-black" x-text="editandoRutina ? 'Editar rutina' : 'Nueva rutina'"></h3>
+            </div>
+            <button class="modal-close" type="button" aria-label="Cerrar" @click="rutinaFormAbierto=false">✕</button>
+        </div>
+
+        <div class="grid gap-5">
+
+            <section class="form-section">
+                <p class="form-section-title">Datos generales</p>
+                <div class="form-grid">
+                    <label class="field">Título *
+                        <input type="text" class="input" x-model="formRutina.titulo" placeholder="Ej.: Rutina de Fuerza">
+                    </label>
+                    <label class="field">Etiqueta
+                        <input type="text" class="input" x-model="formRutina.tag" placeholder="Ej.: Fuerza">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">Objetivo
+                        <select class="input" x-model="formRutina.objetivo">
+                            <option value="Fuerza">Fuerza</option>
+                            <option value="Hipertrofia">Hipertrofia</option>
+                            <option value="Resistencia">Resistencia</option>
+                            <option value="Definición">Definición</option>
+                            <option value="Cuerpo completo">Cuerpo completo</option>
+                            <option value="Cardio">Cardio</option>
+                            <option value="Movilidad">Movilidad</option>
+                        </select>
+                    </label>
+                    <label class="field">Nivel
+                        <input type="text" class="input" x-model="formRutina.nivel" placeholder="Ej.: Todos los niveles">
+                    </label>
+                </div>
+                <div class="form-grid">
+                    <label class="field">Frecuencia
+                        <input type="text" class="input" x-model="formRutina.frecuencia" placeholder="Ej.: 3 a 4 días por semana">
+                    </label>
+                    <label class="field">Duración
+                        <input type="text" class="input" x-model="formRutina.duracion" placeholder="Ej.: 60-75 min">
+                    </label>
+                </div>
+                <label class="field">Descripción
+                    <textarea class="input" rows="2" x-model="formRutina.descripcion" placeholder="Resumen corto de la rutina y a quién está pensada"></textarea>
+                </label>
+                <label class="field">Tips / recomendaciones
+                    <textarea class="input" rows="3" x-model="formRutina.tips" placeholder="Consejos de técnica, progresión y descanso"></textarea>
+                </label>
+            </section>
+
+            <section class="form-section">
+                <div class="flex items-center justify-between gap-3">
+                    <p class="form-section-title" style="margin:0">Días y ejercicios</p>
+                    <button class="btn-panel btn-ghost-green btn-ghost-sm" type="button" @click="agregarDiaRutina()">+ Agregar día</button>
+                </div>
+
+                <template x-for="(d, i) in formRutina.dias" :key="i">
+                    <div class="day-admin">
+                        <div class="day-admin-head">
+                            <p class="font-bold" x-text="'Día ' + (i+1)"></p>
+                            <button class="modal-close" type="button" style="width:2rem;height:2rem" @click="quitarDiaRutina(i)" aria-label="Quitar día">✕</button>
+                        </div>
+                        <input type="text" class="input" x-model="d.nombre" placeholder="Nombre del día (Ej.: Día A — Tren inferior)">
+                        <div class="exercise-head">
+                            <span>Ejercicio</span><span>Series</span><span>Reps</span><span>Descanso</span><span></span>
+                        </div>
+                        <template x-for="(ex, j) in d.ejercicios" :key="j">
+                            <div class="exercise-row">
+                                <input type="text" class="input" x-model="ex.e" placeholder="Ejercicio">
+                                <input type="text" class="input" x-model="ex.s" placeholder="Series">
+                                <input type="text" class="input" x-model="ex.r" placeholder="Reps">
+                                <input type="text" class="input" x-model="ex.rest" placeholder="Descanso">
+                                <button class="modal-close" type="button" style="width:2rem;height:2rem" @click="quitarEjercicioRutina(i, j)" aria-label="Quitar ejercicio">✕</button>
+                            </div>
+                        </template>
+                        <button class="btn-panel mt-2 w-full justify-center" type="button" @click="agregarEjercicioRutina(i)">+ Agregar ejercicio</button>
+                    </div>
+                </template>
+                <p x-show="!formRutina.dias.length" class="text-xs text-dim">Todavía no hay días. Agregá el primero para cargar los ejercicios.</p>
+            </section>
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-6 text-zinc-400">
+                <p>Las rutinas se guardan en este navegador. <strong class="text-zinc-200">Restaurar base</strong> vuelve a las rutinas predeterminadas y descarta los cambios.</p>
+            </div>
+
+            <div class="flex gap-3">
+                <button class="btn-primary w-full justify-center" type="button" @click="guardarRutina()" x-text="editandoRutina ? 'Guardar cambios' : 'Crear rutina'"></button>
+                <button class="btn-secondary justify-center" type="button" @click="rutinaFormAbierto=false">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- registrar pago -->
+<div class="modal-backdrop" x-show="pagoCliente" x-cloak x-transition @click.self="pagoCliente=null" style="z-index:130">
+    <div class="modal" style="max-width:30rem" x-show="pagoCliente" x-transition>
+        <template x-if="pagoCliente">
+            <div>
+                <div class="modal-head">
+                    <div>
+                        <p class="plan-tag">Cobros</p>
+                        <h3 class="mt-1 text-2xl font-black">Registrar cuota</h3>
+                    </div>
+                    <button class="modal-close" type="button" aria-label="Cerrar" @click="pagoCliente=null">✕</button>
+                </div>
+
+                <div class="space-y-4">
+                    <p class="font-bold text-lg" x-text="pagoCliente.nombre + ' ' + pagoCliente.apellido"></p>
+                    <div class="panel-card grid grid-cols-2 gap-4 p-5">
+                        <div>
+                            <p class="stat-label">Plan</p>
+                            <p class="mt-1 font-bold" x-text="PLANES[pagoCliente.plan].label"></p>
+                        </div>
+                        <div>
+                            <p class="stat-label">Importe</p>
+                            <p class="mt-1 font-black text-emerald-300 text-xl" x-text="'$' + (pagoCliente.precio || PLANES[pagoCliente.plan].monto).toLocaleString('es-AR')"></p>
+                        </div>
+                    </div>
+                    <div class="panel-card p-5">
+                        <p class="stat-label">Nueva fecha de vencimiento</p>
+                        <p class="mt-1 font-bold text-lg text-emerald-300" x-text="fmtFecha(nuevaCuotaPago()) + ' · ' + fmtDia(nuevaCuotaPago())"></p>
+                        <p class="mt-1 text-xs text-dim">Se calcula desde hoy según el plan elegido.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="btn-primary w-full justify-center" type="button" @click="registrarPago()">Confirmar pago</button>
+                        <button class="btn-secondary justify-center" type="button" @click="pagoCliente=null">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<!-- detalle / historial -->
+<div class="modal-backdrop" x-show="detalle" x-cloak x-transition @click.self="detalle=null">
+    <div class="modal modal-lg" x-show="detalle" x-transition>
+        <template x-if="detalle">
+            <div>
+                <div class="modal-head">
+                    <div class="flex items-center gap-4">
+                        <div class="client-avatar" style="width:3.2rem;height:3.2rem;font-size:1.05rem" x-text="(detalle.nombre[0]||'') + (detalle.apellido[0]||'')"></div>
+                        <div>
+                            <h3 class="text-xl font-black" x-text="detalle.nombre + ' ' + detalle.apellido"></h3>
+                            <p class="text-sm text-dim" x-text="(detalle.email ? detalle.email + ' · ' : '') + (detalle.telefono || 'Sin teléfono')"></p>
+                        </div>
+                    </div>
+                    <button class="modal-close" type="button" aria-label="Cerrar" @click="detalle=null">✕</button>
+                </div>
+
+                <span class="badge mb-5" :class="estadoBadge(estadoCliente(detalle))" x-text="estadoLabel(detalle)"></span>
+
+                <div class="grid gap-4 sm:grid-cols-3">
+                    <div class="panel-card p-4">
+                        <p class="stat-label">Plan</p>
+                        <p class="mt-1 font-bold" x-text="PLANES[detalle.plan].label + ' — $' + detalle.precio.toLocaleString('es-AR')"></p>
+                    </div>
+                    <div class="panel-card p-4">
+                        <p class="stat-label">Próxima cuota</p>
+                        <p class="mt-1 font-bold" x-text="fmtFecha(detalle.proximaCuota)"></p>
+                        <p class="text-xs text-dim" x-text="proximaDelta(detalle)"></p>
+                    </div>
+                    <div class="panel-card p-4">
+                        <p class="stat-label">Último pago</p>
+                        <p class="mt-1 font-bold" x-text="fmtFecha(detalle.ultimoPago)"></p>
+                        <p class="text-xs text-dim" x-text="detalle.fechaInicio ? 'Alta: ' + fmtFecha(detalle.fechaInicio) : ''"></p>
+                    </div>
+                </div>
+
+                <div class="mt-6" x-show="tieneFicha(detalle)">
+                    <p class="mb-3 text-sm font-bold uppercase tracking-widest text-zinc-500">Ficha del cliente</p>
+                    <div class="panel-card p-5">
+                        <div class="ficha-grid">
+                            <template x-for="d in fichaDatos(detalle)" :key="'ficha-' + d.label">
+                                <div class="ficha-item">
+                                    <p class="stat-label" x-text="d.label"></p>
+                                    <p class="mt-1 text-sm font-semibold text-zinc-200" x-text="d.valor"></p>
+                                </div>
+                            </template>
+                        </div>
+                        <template x-if="detalle.medidas && detalle.medidas.length">
+                            <div class="mt-5">
+                                <p class="stat-label mb-2">Medidas corporales</p>
+                                <div class="table-wrap">
+                                    <table class="admin-table" style="min-width:520px">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Peso</th>
+                                                <th>Espalda</th>
+                                                <th>Cintura</th>
+                                                <th>Abdomen</th>
+                                                <th>Glúteo</th>
+                                                <th>Pierna</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template x-for="(m, i) in detalle.medidas" :key="'dm-' + i">
+                                                <tr>
+                                                    <td class="text-dim" x-text="fmtFecha(m.fecha)"></td>
+                                                    <td x-text="medidaValor(m, 'peso')"></td>
+                                                    <td x-text="medidaValor(m, 'espalda')"></td>
+                                                    <td x-text="medidaValor(m, 'cintura')"></td>
+                                                    <td x-text="medidaValor(m, 'abdomen')"></td>
+                                                    <td x-text="medidaValor(m, 'gluteo')"></td>
+                                                    <td x-text="medidaValor(m, 'pierna')"></td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <p class="mt-6 mb-3 text-sm font-bold uppercase tracking-widest text-zinc-500">Historial de pagos</p>
+                <template x-if="detalle.pagos && detalle.pagos.length">
+                    <div>
+                        <template x-for="(p, i) in detalle.pagos" :key="i">
+                            <div class="payment-row">
+                                <div class="flex items-center gap-3">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#34d399" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>
+                                    <div>
+                                        <p class="font-semibold" x-text="'Cuota ' + p.periodo"></p>
+                                        <p class="text-xs text-dim" x-text="fmtFecha(p.fecha)"></p>
+                                    </div>
+                                </div>
+                                <p class="font-bold text-emerald-300" x-text="'$' + (p.monto||0).toLocaleString('es-AR')"></p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+                <p x-show="!(detalle.pagos && detalle.pagos.length)" class="text-sm text-zinc-500">Sin pagos registrados todavía.</p>
+
+                <template x-if="detalle.notas">
+                    <div class="panel-card mt-5 p-4">
+                        <p class="stat-label">Notas</p>
+                        <p class="mt-1 text-sm text-zinc-300" x-text="detalle.notas"></p>
+                    </div>
+                </template>
+
+                <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                    <button class="btn-primary w-full justify-center" type="button" @click="abrirPago(detalle)">Registrar cuota</button>
+                    <button class="btn-secondary w-full justify-center" type="button" @click="abrirForm(detalle); detalle=null">Editar cliente</button>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<!-- confirmar eliminación -->
+<div class="modal-backdrop" x-show="eliminarPendiente" x-cloak x-transition @click.self="eliminarPendiente=null">
+    <div class="modal" style="max-width:26rem" x-show="eliminarPendiente" x-transition>
+        <template x-if="eliminarPendiente">
+            <div class="text-center">
+                <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-red-500/10 border border-red-500/25 text-red-400">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+                </div>
+                <h3 class="mt-4 text-xl font-black">Eliminar cliente</h3>
+                <p class="mt-2 text-sm leading-6 text-zinc-400">¿Querés eliminar a <strong class="text-zinc-200" x-text="eliminarPendiente.nombre + ' ' + eliminarPendiente.apellido"></strong>?<br>Se borrará el cliente y su historial de pagos.</p>
+                <div class="mt-6 flex gap-3">
+                    <button class="btn-danger btn-panel w-full justify-center" type="button" @click="eliminarCliente()">Sí, eliminar</button>
+                    <button class="btn-panel w-full justify-center" type="button" @click="eliminarPendiente=null">Cancelar</button>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<!-- formulario de gasto -->
+<div class="modal-backdrop" x-show="gastoFormAbierto" x-cloak x-transition @click.self="gastoFormAbierto=false" style="z-index:130">
+    <div class="modal" style="max-width:26rem" x-show="gastoFormAbierto" x-transition>
+        <div class="flex items-center justify-between">
+            <h3 class="text-xl font-black" x-text="editandoGasto ? 'Editar gasto' : 'Nuevo gasto'"></h3>
+            <button type="button" class="close-x" @click="gastoFormAbierto=false" aria-label="Cerrar">×</button>
+        </div>
+        <div class="mt-6 grid gap-4">
+            <label class="field" for="gas-fecha">Fecha</label>
+            <input id="gas-fecha" type="date" class="input" x-model="formGasto.fecha">
+
+            <label class="field" for="gas-cat">Categoría</label>
+            <select id="gas-cat" class="input" x-model="formGasto.categoria">
+                <option value="alquiler">Alquiler</option>
+                <option value="servicios">Servicios (luz, agua, internet)</option>
+                <option value="maquinas">Máquinas y equipos</option>
+                <option value="insumos">Insumos (agua potable, descartables)</option>
+                <option value="otros">Otros</option>
+            </select>
+
+            <label class="field" for="gas-desc">Descripción <span class="text-dim font-normal">(opcional)</span></label>
+            <input id="gas-desc" type="text" class="input" placeholder="Ej: Alquiler de septiembre" x-model="formGasto.descripcion">
+
+            <label class="field" for="gas-monto">Monto ($)</label>
+            <input id="gas-monto" type="number" min="1" step="any" class="input" placeholder="0" x-model="formGasto.monto">
+        </div>
+        <div class="mt-6 flex gap-3">
+            <button class="btn-panel btn-green w-full justify-center" type="button" @click="guardarGasto()">Guardar gasto</button>
+            <button class="btn-panel w-full justify-center" type="button" @click="gastoFormAbierto=false">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="./app.js"></script>
+<script defer src="./Nova Gym _ Gimnasio premium_files/cdn.min.js"></script>
+</body>
+</html>
